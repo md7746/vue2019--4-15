@@ -1,60 +1,65 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+    <app-header></app-header>
+    <router-view class="content"></router-view>
+    <router-view name="Register"></router-view>
+    <router-view name="Login"></router-view>
   </div>
 </template>
 
 <script>
+import appHeader from "./view/header";
 export default {
-  name: 'app',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
-    }
+  name: "app",
+  data() {
+    return {};
+  },
+  created() {
+    //在页面加载时读取localStorage里的状态信息
+    // if (localStorage.getItem("store")) {
+    //   this.$store.replaceState(
+    //     Object.assign(
+    //       {},
+    //       this.$store.state,
+    //       JSON.parse(localStorage.getItem("store"))
+    //     )
+    //   );
+    // }
+
+    // //在页面刷新时将vuex里的信息保存到localStorage里
+    // window.addEventListener("beforeunload", () => {
+    //   localStorage.setItem("store", JSON.stringify(this.$store.state));
+    // });
+
+    if (window.localStorage.getItem("isLogin"))
+      this.$store.commit(
+        "isLoginMutation",
+        window.localStorage.getItem("isLogin")
+      );
+
+    if (window.localStorage.getItem("token"))
+      this.$store.dispatch(
+        "tokenAction",
+        window.localStorage.getItem("token")
+      );
+
+    if (window.localStorage.getItem("userInfo"))
+      this.$store.dispatch(
+        "userInfoAction",
+        JSON.parse(window.localStorage.getItem("userInfo"))
+      );
+  },
+  components: {
+    appHeader
   }
-}
+};
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.fr {
+  float: right;
 }
-
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
+.content {
+  padding: 50px;
 }
 </style>
